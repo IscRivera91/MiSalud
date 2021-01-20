@@ -8,6 +8,25 @@ class BaseDatos
     
             SET NAMES utf8mb4;
             SET FOREIGN_KEY_CHECKS = 0;
+
+            DROP TABLE IF EXISTS `presiones`;
+            CREATE TABLE `presiones`  (
+            `id` int(11) NOT NULL AUTO_INCREMENT,
+            `usuario_id` int(11) NULL DEFAULT NULL,
+            `sistolica` int(11) NOT NULL,
+            `diastolica` int(11) NOT NULL,
+            `bpm` int(11) NULL DEFAULT NULL,
+            `fecha` date NULL DEFAULT NULL,
+            `hora` time(0) NULL DEFAULT NULL,
+            `activo` tinyint(11) NULL DEFAULT 0,
+            `usuario_registro_id` int(11) NULL DEFAULT NULL,
+            `usuario_actualizacion_id` int(11) NULL DEFAULT NULL,
+            `fecha_registro` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0),
+            `fecha_actualizacion` timestamp(0) NULL DEFAULT CURRENT_TIMESTAMP(0) ON UPDATE CURRENT_TIMESTAMP(0),
+            PRIMARY KEY (`id`) USING BTREE,
+            INDEX `usuario_id`(`usuario_id`) USING BTREE,
+            CONSTRAINT `presiones_ibfk_1` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+            ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
     
             DROP TABLE IF EXISTS `grupos`;
             CREATE TABLE `grupos`  (
