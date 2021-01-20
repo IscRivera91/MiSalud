@@ -163,10 +163,11 @@ class BaseDatos
             (1, 'menus', 'MENUS', 'fas fa-th-list', '1', '-1', '-1'),
             (2, 'metodos', 'METODOS', 'fas fa-list-ul', '1', '-1', '-1'),
             (3, 'grupos', 'GRUPOS', 'fas fa-users-cog', '1', '-1', '-1'),
-            (4, 'usuarios', 'USUARIOS', 'fas fa-users', '1', '-1', '-1');
+            (4, 'usuarios', 'USUARIOS', 'fas fa-users', '1', '-1', '-1'),
+            (5, 'presiones', 'PRESION', 'fas fa-heartbeat', '1', '-1', '-1');
         ";
 
-        $numeroMenus = 4;
+        $numeroMenus = 5;
 
         $numeroMetodosEspeciales = 5;
         $query .= "
