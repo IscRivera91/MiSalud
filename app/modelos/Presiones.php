@@ -11,7 +11,7 @@ class Presiones extends Modelo
     {
         $tabla = 'presiones';
         $relaciones = [
-            'menus' => "{$tabla}.usuario_id"
+            'usuarios' => "{$tabla}.usuario_id"
 
         ]; 
         $columnas = [
