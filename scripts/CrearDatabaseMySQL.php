@@ -1,12 +1,11 @@
 <?php
-require_once __DIR__.'/../config.php';
+require_once __DIR__.'/../app/config/requires.php';
 require_once __DIR__.'/../recursos/BD/BaseDatos.php';
-require_once __DIR__.'/../vendor/autoload.php';
 
-use Clase\MySQL\Database;
+use App\clases\MySQL\Database;
 
-$coneccion = new Database();
+$coneccion = new Database(DB_USER,DB_PASSWORD,DB_NAME,DB_HOST);
 
 BaseDatos::crear($coneccion);
 
-BaseDatos::insertarRegistrosBase($coneccion,PROGRAMADOR_USER,PROGRAMADOR_PASSWORD,PROGRAMADOR_NOMBRE,PROGRAMADOR_EMAIL,PROGRAMADOR_SEXO);
+BaseDatos::insertarRegistrosBase($coneccion,$_ENV['USER'],$_ENV['PASSWORD'],$_ENV['NOMBRE'],$_ENV['MAIL'],'m');

@@ -1,10 +1,9 @@
 <?php 
 
-namespace Ayuda;
+namespace App\ayudas;
 
-use Interfas\Database;
-use Interfas\GeneraConsultas;
-use Modelo\MetodosGrupos;
+use App\interfaces\Database;
+use App\modelos\MetodosGrupos;
 
 class Acciones
 {
@@ -14,7 +13,7 @@ class Acciones
         string $controladorActual
     ): array {
 
-        if (isset($_SESSION[SESSION_ID]["{$controladorActual}Acciones"])) {
+        if (isset($_SESSION[SESSION_ID]["{$controladorActual}Acciones"]) && GUARDAR_ACCIONES_SESSION) {
             return $_SESSION[SESSION_ID]["{$controladorActual}Acciones"];
         }
 
@@ -25,6 +24,8 @@ class Acciones
             ['campo' => "metodos.activo_accion", 'valor'=>1, 'signoComparacion'=>'=', 'conectivaLogica'=>'AND'],
             ['campo' => "menus.nombre", 'valor'=>$controladorActual, 'signoComparacion'=>'=', 'conectivaLogica'=>'AND']
         ];
+
+        $filtroEspecial = '';
         
         $columnas = [
             'metodos_nombre',
@@ -37,7 +38,7 @@ class Acciones
             'metodos.nombre' => 'ASC'
         ];
 
-        $resultado = $modeloMetodosGrupos->buscarConFiltros($filtros, $columnas, $orderBy);
+        $resultado = $modeloMetodosGrupos->buscarConFiltros($filtros, $filtroEspecial, $columnas, $orderBy);
 
         if ($resultado['numeroRegistros'] === 0){
             return [];

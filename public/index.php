@@ -1,16 +1,16 @@
 <?php 
+$rutaBase = __DIR__.'/../';
+require_once "{$rutaBase}app/config/requires.php"; 
 
-require_once __DIR__.'/../config.php'; 
-require_once __DIR__.'/../vendor/autoload.php';
+use App\ayudas\Valida;
+use App\ayudas\Redireccion;
+use App\clases\Autentificacion;
+use App\errores\Base AS ErrorBase;
 
-use Ayuda\Valida;
-use Ayuda\Redireccion;
-use Clase\Autentificacion;
-use Error\Base AS ErrorBase;
+$controladoresSinPermisos = ['inicio','password'];
+$parametrosGetRequeridos = array('controlador','metodo');
 
-$parametros_get_requeridos = array('controlador','metodo');
-
-foreach ($parametros_get_requeridos as $parametro){
+foreach ($parametrosGetRequeridos as $parametro){
     validaParametroGet($parametro);
 }
 
@@ -18,11 +18,10 @@ $controladorActual = $_GET['controlador'];
 $metodoActual = $_GET['metodo'];
 
 try {
-    $claseDatabase = 'Clase\\'.DB_TIPO.'\\Database';
+    $claseDatabase = 'App\\clases\\'.DB_TIPO.'\\Database';
     $coneccion = new $claseDatabase();
 }catch (ErrorBase $e) {
-    $error = new ErrorBase('Error al conectarce a la base de datos',$e);
-    $error->muestraError();
+    print_r('Error al conectarce a la base de datos, favor de contactar al equipo de desarrollo');
     exit;
 }
 
@@ -32,8 +31,8 @@ if ($controladorActual === 'session' && $metodoActual === 'login'){
     try{
         $resultado = $autentificacion->login();
     }catch(ErrorBase $e){
-        $error = new ErrorBase('Error al hacer login',$e);
-        $error->muestraError();
+        $mensaje = "El usuario o contraseña son incorrectos";
+        header("Location: login.php?mensaje=$mensaje");
         exit;
     }
     Redireccion::enviar('inicio','index',$resultado['sessionId'],'Bienvenido');
@@ -46,8 +45,8 @@ $sessionId = $_GET['session_id'];
 try{
     $datos = $autentificacion->validaSessionId($sessionId);
 }catch(ErrorBase $e){
-    $error = new ErrorBase('Error al validar session_id',$e);
-    $error->muestraError();
+    $mensaje = "session_id no valido";
+    header("Location: login.php?mensaje=$mensaje");
     exit;
 }
 
@@ -64,7 +63,7 @@ if ($controladorActual === 'session' && $metodoActual === 'logout'){
 
 $autentificacion->defineConstantes($datos,$sessionId);
 
-if ($controladorActual != 'inicio'){
+if (!in_array($controladorActual,$controladoresSinPermisos)){
 
     if (!Valida::permiso($coneccion, GRUPO_ID, $controladorActual, $metodoActual)) {
         Redireccion::enviar('inicio','index',SESSION_ID,"No tienes permisos para acceder al metodo:{$metodoActual} del controlador:{$controladorActual}");
@@ -73,12 +72,12 @@ if ($controladorActual != 'inicio'){
 
 }
 
-if (!file_exists('../app/controladores/'.$controladorActual.'.php')){
+if (!file_exists("{$rutaBase}app/controladores/{$controladorActual}.php")){
     Redireccion::enviar('inicio','index',SESSION_ID,"No existe el controlador:{$controladorActual}");
     exit;
 }
 
-$controladorNombre = 'Controlador\\'.$controladorActual;
+$controladorNombre = 'App\\controladores\\'.$controladorActual;
 $controlador = new $controladorNombre($coneccion);
 
 if (!method_exists($controlador,$metodoActual)){
@@ -90,7 +89,7 @@ $controlador->$metodoActual();
 
 #seleciona la vista
 
-$rutaVistasBase = '../app/vistas';
+$rutaVistasBase = "{$rutaBase}/app/vistas";
 $rutaVista = '';
 if ( $metodoActual == 'registrar') {
     $rutaVista = "{$rutaVistasBase}/1base/registrar.php";
@@ -111,18 +110,17 @@ if(file_exists($vista)) {
 }
 
 if ($rutaVista == '') {
-    $error = new ErrorBase("No se puedo cargar la vista controlador:{$controladorActual} metodo:{$metodoActual}");
-    $error->muestraError();
+    print_r("No se puedo cargar la vista controlador:{$controladorActual} metodo:{$metodoActual}");
     exit;
 }
 
 # El menu se carga hasta el final
-$menu_navegacion = Ayuda\Menu::crear($coneccion,GRUPO_ID);
+$menu_navegacion = \App\ayudas\Menu::crear($coneccion,GRUPO_ID);
 
 ?>
-<?php require_once __DIR__.'/../recursos/html/head.php'; ?>
-<?php require_once __DIR__.'/../recursos/html/nav.php'; ?>
-<?php require_once __DIR__.'/../recursos/html/menu.php'; ?>
+<?php require_once "{$rutaBase}/recursos/html/head.php"; ?>
+<?php require_once "{$rutaBase}/recursos/html/nav.php"; ?>
+<?php require_once "{$rutaBase}/recursos/html/menu.php"; ?>
 
 <div class="container-fluid">
     
@@ -176,7 +174,7 @@ $menu_navegacion = Ayuda\Menu::crear($coneccion,GRUPO_ID);
 
 </div>
 <?php
-    require_once __DIR__.'/../recursos/html/final.php'; 
+    require_once "{$rutaBase}recursos/html/final.php"; 
     
     function validaParametroGet(string $parameto_get):void
     {

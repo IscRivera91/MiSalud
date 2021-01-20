@@ -1,6 +1,7 @@
 .idea/
 .phpunit.result.cache
+/mysql
 /vendor
 archivos/*
-config.php
+.env
 phpunit.xml

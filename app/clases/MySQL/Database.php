@@ -1,14 +1,14 @@
 <?php
 
-namespace Clase\MySQL;
+namespace App\clases\MySQL;
 
 use PDO;
 use PDOException;
 use PDOStatement;
-use Ayuda\Valida;
-use Ayuda\Analiza;
-use Interfas\Database AS DatabaseInterface;
-use Error\MySQL AS ErrorMySQL;
+use App\ayudas\Valida;
+use App\ayudas\Analiza;
+use App\interfaces\Database AS DatabaseInterface;
+use App\errores\MySQL AS ErrorMySQL;
 
 
 class Database implements DatabaseInterface
@@ -31,7 +31,7 @@ class Database implements DatabaseInterface
         $this->passwordBd = $passwordBd;
         $this->nombreBd = $nombreBd;
         
-        $dsn = 'mysql:host=' . $this->hostBd . ';dbname=' . $this->nombreBd;
+        $dsn = "mysql:host={$this->hostBd};dbname={$this->nombreBd}";
         $opciones = array(PDO::ATTR_PERSISTENT=>true, PDO::ATTR_ERRMODE=>PDO::ERRMODE_EXCEPTION);
 
         try
@@ -135,6 +135,21 @@ class Database implements DatabaseInterface
         }
     }
 
+    public function beginTransaction(): void
+    {
+        $this->dbh->beginTransaction();
+    }
+
+    public function rollBack(): void
+    {
+        $this->dbh->rollBack();
+    }
+
+    public function commit(): void
+    {
+        $this->dbh->commit();
+    }
+
     public function ejecutaQuery(string $query)
     {
         $this->stmt = $this->dbh->prepare($query);
@@ -145,7 +160,7 @@ class Database implements DatabaseInterface
         } 
         catch (PDOException $e)
         {
-            throw new ErrorMySQL($e,' Consulta: '.$consulta);
+            throw new ErrorMySQL($e,' Query: '.$query);
         }
     }
 

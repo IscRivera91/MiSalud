@@ -1,50 +1,66 @@
 <?php 
 
-namespace Controlador;
+namespace App\controladores;
 
-use Ayuda\Html;
-use Clase\Modelo;
-use Modelo\Metodos;
-use Clase\Controlador;
-use Interfas\Database;
-use Modelo\MetodosGrupos;
-use Error\Base AS ErrorBase;
-use Modelo\Grupos AS ModeloGrupos;
+use App\ayudas\Html;
+use App\clases\Modelo;
+use App\modelos\Metodos;
+use App\clases\Controlador;
+use App\interfaces\Database;
+use App\modelos\MetodosGrupos;
+use App\errores\Base AS ErrorBase;
+use App\modelos\Grupos AS ModeloGrupos;
 
 class grupos extends Controlador
 {
     public array $metodosAgrupadosPorMenu;
     public string $nombreGrupo;
     public int $grupoId;
-    public Modelo $Metodos;
-    public Modelo $MetodosGrupos;
+    public $Metodos;
+    public $MetodosGrupos;
+    public $Grupos;
 
     public function __construct(Database $coneccion)
     {
-        $modelo = new ModeloGrupos($coneccion);
+        $this->modelo = new ModeloGrupos($coneccion);
+        $this->Grupos = new ModeloGrupos($coneccion);
         $this->Metodos = new Metodos($coneccion);
         $this->MetodosGrupos = new MetodosGrupos($coneccion);
-        $nombreMenu = 'grupos';
+        $this->nombreMenu = 'grupos';
         $this->breadcrumb = false;
 
-        $camposLista = [
+        $this->camposLista = [
             'Id' => 'grupos_id',
             'Grupo' => 'grupos_nombre',
             'Activo' => 'grupos_activo'
         ];
 
-        $camposFiltrosLista = [
-            'Grupo' => 'grupos.nombre'
-        ];
+        parent::__construct();
+    }
 
-        parent::__construct($modelo, $nombreMenu, $camposLista, $camposFiltrosLista);
+    public function generaInputFiltros (array $datosFiltros): void 
+    {
+        $col = 3;
+        $this->sizeColumnasInputsFiltros = $col;
+        
+        //values de todos los inputs vacios
+        $datos['grupos+nombre'] = '';
+
+        foreach ($datosFiltros as $key => $filtro) {
+            $datos[$key] = $filtro;
+        }
+
+        $tablaCampo = 'grupos+nombre';
+        $placeholder = '';
+
+        $this->htmlInputFiltros[$tablaCampo] = Html::inputText($col,'Grupo',1,$tablaCampo,$placeholder,$datos[$tablaCampo]);
     }
 
     public function registrar()
     {
         $this->breadcrumb = true;
         
-        $this->htmlInputFormulario[] = Html::input('Grupo','nombre',4);
+        $this->htmlInputFormulario[] = Html::inputTextRequired(4,'Grupo',1,'nombre');
 
         $this->htmlInputFormulario[] = Html::submit('Registrar',$this->llaveFormulario,4);
     }
@@ -57,7 +73,7 @@ class grupos extends Controlador
         $nombreMenu = $this->nombreMenu;
         $registro = $this->registro;
 
-        $this->htmlInputFormulario[] = Html::input('Grupo','nombre',4,$registro["{$nombreMenu}_nombre"]);
+        $this->htmlInputFormulario[] = Html::inputTextRequired(4,'Grupo',1,'nombre','',$registro["{$nombreMenu}_nombre"]);
 
         $this->htmlInputFormulario[] = Html::submit('Modificar',$this->llaveFormulario,4);
     }
@@ -66,8 +82,8 @@ class grupos extends Controlador
     {
         $grupoId = $this->validaRegistoId();
         $this->grupoId = $grupoId;
-        $this->metodosAgrupadosPorMenu = $this->modelo->obtenerMetodosAgrupadosPorMenu($grupoId);
-        $this->nombreGrupo = $this->modelo->obtenerNombreGrupo($grupoId);
+        $this->metodosAgrupadosPorMenu = $this->Grupos->obtenerMetodosAgrupadosPorMenu($grupoId);
+        $this->nombreGrupo = $this->Grupos->obtenerNombreGrupo($grupoId);
         
     }
 

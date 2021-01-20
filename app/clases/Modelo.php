@@ -1,14 +1,13 @@
 <?php
 
-namespace Clase;
+namespace App\clases;
 
-use Interfas\Database;
-use Interfas\GeneraConsultas;
-use Clase\GeneraConsultasMySQL;
-use Error\Base AS ErrorBase;
-use Error\Esperado AS ErrorEsperado;
+use App\interfaces\Database;
+use App\interfaces\GeneraConsultas;
+use App\errores\Base AS ErrorBase;
+use App\errores\Esperado AS ErrorEsperado;
 
-class Modelo 
+abstract class Modelo 
 {
     private GeneraConsultas $generaConsulta;
     private string $tabla;
@@ -21,7 +20,7 @@ class Modelo
 
     public function __construct(Database $coneccion, string $tabla, array $relaciones, array $columnas)
     {
-        $claseGeneraConsultas = '\\Clase\\'.DB_TIPO.'\\GeneraConsultas';
+        $claseGeneraConsultas = 'App\\clases\\'.DB_TIPO.'\\GeneraConsultas';
         $this->generaConsulta = new $claseGeneraConsultas($coneccion);
         $this->coneccion = $coneccion;
         $this->tabla = $tabla;
@@ -102,8 +101,11 @@ class Modelo
         $filtros = [
             ['campo'=>$this->tabla.'.id', 'valor'=>$id, 'signoComparacion'=>'=', 'conectivaLogica' => '']
         ];
+        
+        $filtroEspecial = '';
+
         try {
-            $resultado = $this->buscarConFiltros($filtros, $columnas, $orderBy, $limit, $noUsarRelaciones, $nuevasRelaciones);
+            $resultado = $this->buscarConFiltros($filtros, $filtroEspecial, $columnas, $orderBy, $limit, $noUsarRelaciones, $nuevasRelaciones);
         } catch(ErrorBase $e) {
             throw new ErrorBase($e->getMessage(),$e);
         }
@@ -112,6 +114,7 @@ class Modelo
 
     public function buscarConFiltros( 
         array $filtros,
+        string $filtroEspecial = '',
         array $columnas = [],
         array $orderBy = [],
         string $limit = '',
@@ -144,7 +147,8 @@ class Modelo
         array $nuevasRelaciones = []
     ): array {
         try {
-            $resultado = $this->buscarConFiltros([], $columnas, $orderBy, $limit, $noUsarRelaciones, $nuevasRelaciones);
+            $filtroEspecial = '';
+            $resultado = $this->buscarConFiltros([], $filtroEspecial, $columnas, $orderBy, $limit, $noUsarRelaciones, $nuevasRelaciones);
         } catch(ErrorBase $e) {
             throw new ErrorBase($e->getMessage(),$e);
         }
@@ -223,6 +227,7 @@ class Modelo
     public function obtenerNumeroRegistros(array $filtros =[]):int
     {
         try {
+            $filtroEspecial = '';
             $columnas = ['id']; 
             $orderBy = []; 
             $limit = ''; 
@@ -230,11 +235,26 @@ class Modelo
             if (count($filtros) == 0){
                 $noUsarRelaciones = true;
             } 
-            $resultado = $this->buscarConFiltros($filtros,$columnas, $orderBy, $limit, $noUsarRelaciones);
+            $resultado = $this->buscarConFiltros($filtros, $filtroEspecial, $columnas, $orderBy, $limit, $noUsarRelaciones);
         } catch(ErrorBase $e) {
             throw new ErrorBase($e->getMessage(),$e);
         }
         return ( int ) $resultado['numeroRegistros'];
+    }
+
+    public function iniciaTransaccion()
+    {
+        $this->coneccion->beginTransaction();
+    }
+
+    public function cancelaTransaccion()
+    {
+        $this->coneccion->rollBack();
+    }
+
+    public function ejecutaTransaccion()
+    {
+        $this->coneccion->commit();
     }
 
     private function eliminaColumnasProtegidas(array $resultado):array

@@ -1,15 +1,16 @@
 <?php
 
-use Modelo\Grupos;
-use Modelo\Usuarios;
-use Modelo\Sessiones;
-use Modelo\MetodosGrupos;
-use Clase\Autentificacion;
-use Error\Base AS ErrorBase;
-use PHPUnit\Framework\TestCase;
-use Error\Autentificacion AS ErrorAutentificacion;
+namespace Test\clases;
 
-class ClaseAutentificacionTest extends TestCase
+use App\modelos\Grupos;
+use App\modelos\Usuarios;
+use Test\LimpiarDatabase;
+use App\clases\Autentificacion;
+use PHPUnit\Framework\TestCase;
+use App\errores\Base AS ErrorBase;
+use App\errores\Autentificacion AS ErrorAutentificacion;
+
+class AutentificacionTest extends TestCase
 {
 
     /**
@@ -19,7 +20,7 @@ class ClaseAutentificacionTest extends TestCase
     {
         $this->assertSame(1,1);
 
-        $claseDatabase = 'Clase\\'.DB_TIPO.'\\Database';
+        $claseDatabase = 'App\\clases\\'.DB_TIPO.'\\Database';
         $coneccion = new $claseDatabase();
 
         return $coneccion;
@@ -33,15 +34,10 @@ class ClaseAutentificacionTest extends TestCase
     {
         $this->assertSame(1,1);
 
-        $Sessiones =  new Sessiones($coneccion);
         $Usuarios = new Usuarios($coneccion);
-        $MetodosGrupos = new MetodosGrupos($coneccion);
         $Grupos = new Grupos($coneccion);
 
-        $Sessiones->eliminarTodo();
-        $Usuarios->eliminarTodo();
-        $MetodosGrupos->eliminarTodo();
-        $Grupos->eliminarTodo();
+        LimpiarDatabase::start($coneccion);
         
         $grupo = ['id' => GRUPO_ID, 'nombre' => 'programador'];
         $Grupos->registrar($grupo);

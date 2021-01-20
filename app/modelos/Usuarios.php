@@ -1,11 +1,11 @@
 <?php 
 
-namespace Modelo;
+namespace App\modelos;
 
-use Clase\Modelo;
-use Interfas\Database;
-use Error\Base AS ErrorBase;
-use Error\Autentificacion AS ErrorAutentificacion;
+use App\clases\Modelo;
+use App\interfaces\Database;
+use App\errores\Base AS ErrorBase;
+use App\errores\Autentificacion AS ErrorAutentificacion;
 
 class Usuarios extends Modelo
 {
@@ -41,7 +41,9 @@ class Usuarios extends Modelo
             ['campo' => "usuarios.password", 'valor' =>  md5($datosPost['password']) , 'signoComparacion' => '=' , 'conectivaLogica' => 'AND']
         ];
 
-        $resultado = parent::buscarConFiltros($filtros); 
+        $filtroEspecial = '';
+
+        $resultado = parent::buscarConFiltros($filtros, $filtroEspecial); 
 
         if ( $resultado['numeroRegistros'] !== 1){
             throw new ErrorAutentificacion('usuario o contraseña incorrecto');

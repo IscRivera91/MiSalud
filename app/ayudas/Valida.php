@@ -1,11 +1,10 @@
 <?php
 
-namespace Ayuda;
+namespace App\ayudas;
 
-use Interfas\Database;
-use Modelo\MetodosGrupos;
-use Error\Base AS ErrorBase;
-use Interfas\GeneraConsultas;
+use App\interfaces\Database;
+use App\modelos\MetodosGrupos;
+use App\errores\Base AS ErrorBase;
 
 class Valida 
 {
@@ -88,13 +87,15 @@ class Valida
             ['campo' => "menus.nombre",         'valor'=>$controladorActual,'signoComparacion'=>'=', 'conectivaLogica'=>'AND']
         ];
 
+        $filtroEspecial = '';
+
         $columnas = [
             'id',
             'metodos_nombre',
             'menus_nombre'
         ];
 
-        $resultado = $modeloMetodosGrupos->buscarConFiltros($filtros, $columnas);
+        $resultado = $modeloMetodosGrupos->buscarConFiltros($filtros, $filtroEspecial, $columnas);
         
         if ($resultado['numeroRegistros'] == 1) {
             return true;

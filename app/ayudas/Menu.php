@@ -1,10 +1,9 @@
 <?php 
 
-namespace Ayuda;
+namespace App\ayudas;
 
-use Interfas\Database;
-use Interfas\GeneraConsultas;
-use Modelo\MetodosGrupos;
+use App\interfaces\Database;
+use App\modelos\MetodosGrupos;
 
 class Menu
 {
@@ -13,7 +12,7 @@ class Menu
         int $grupoId
     ): array {
         
-        if (isset($_SESSION[SESSION_ID]['menuDefinido'])) {
+        if (isset($_SESSION[SESSION_ID]['menuDefinido']) && GUARDAR_MENU_SESSION) {
             return $_SESSION[SESSION_ID]['menuDefinido'];
         }
 
@@ -25,6 +24,8 @@ class Menu
             ['campo' => "metodos.activo_menu", 'valor'=>true, 'signoComparacion'=>'=', 'conectivaLogica'=>'AND'],
             ['campo' => "menus.activo", 'valor'=>true, 'signoComparacion'=>'=', 'conectivaLogica'=>'AND']
         ];
+
+        $filtroEspecial = '';
         
         $columnas = [
             'metodos_nombre',
@@ -39,7 +40,7 @@ class Menu
             'metodos.nombre' => 'ASC'
         ];
 
-        $resultado = $modeloMetodosGrupos->buscarConFiltros($filtros, $columnas, $orderBy);
+        $resultado = $modeloMetodosGrupos->buscarConFiltros($filtros, $filtroEspecial, $columnas, $orderBy);
 
         $menuDefinido = array();
 

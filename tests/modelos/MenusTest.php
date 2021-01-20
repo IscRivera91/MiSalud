@@ -1,152 +1,37 @@
 <?php
 
-use Modelo\Menus;
-use Modelo\Grupos;
-use Modelo\Metodos;
-use Modelo\MetodosGrupos;
-use Error\Base AS ErrorBase;
+namespace Test\modelos;
+
+use App\modelos\Menus;
+use App\errores\Base AS ErrorBase;
+use Test\LimpiarDatabase;
 use PHPUnit\Framework\TestCase;
 
-class ModeloGruposTest extends TestCase
+class MenusTest extends TestCase
 {
-    public int $registrosExtras = 2;
     /**
      * @test
      */
     public function crearConeccion()
     {
         $this->assertSame(1,1);
-        $claseDatabase = 'Clase\\'.DB_TIPO.'\\Database';
+        $claseDatabase = 'App\\clases\\'.DB_TIPO.'\\Database';
         $coneccion = new $claseDatabase();
         return $coneccion;
-    
     }
 
     /**
      * @test
      * @depends crearConeccion
      */
-    public function crearModeloMetodosGrupos($coneccion)
+    public function crearModelo($coneccion)
     {
         $this->assertSame(1,1);
-        $MetodosGrupos = new MetodosGrupos($coneccion);
-
-        return $MetodosGrupos;
-    }
-
-    /**
-     * @test
-     * @depends crearConeccion
-     * @depends crearModeloMetodosGrupos
-     */
-    public function crearModelo($coneccion,$MetodosGrupos)
-    {
-        $this->assertSame(1,1);
-        $Grupos = new Grupos($coneccion);
-        $Metodos = new Metodos($coneccion);
         $Menus = new Menus($coneccion);
 
-        $MetodosGrupos->eliminarTodo();
-        $Grupos->eliminarTodo();
-        $Metodos->eliminarTodo();
-        $Menus->eliminarTodo();
-        
-        $grupos = [
-            ['id' => 5,'nombre' => 'nombre5' , 'activo' => 1],
-            ['id' => 6,'nombre' => 'nombre6' , 'activo' => 1]
-        ];
-        foreach ($grupos as $grupo) {
-            $Grupos->registrar($grupo);
-        }
+        LimpiarDatabase::start($coneccion);
 
-        $menus = [
-            ['id' => 1,'nombre' => 'nombre1' , 'activo' => 1],
-            ['id' => 2,'nombre' => 'nombre2' , 'activo' => 1]
-        ];
-        foreach ($menus as $menu) {
-            $Menus->registrar($menu);
-        }
-
-        $metodos = [
-            ['id'=>1, 'nombre'=>'accion1', 'accion'=> 'accion1', 'icono' => 'icono-accion1', 'menu_id'=>1, 'activo_menu'=>0, 'activo_accion'=>1],
-            ['id'=>2, 'nombre'=>'accion2', 'accion'=> 'accion2', 'icono' => 'icono-accion2', 'menu_id'=>1, 'activo_menu'=>0, 'activo_accion'=>1],
-            ['id'=>3, 'nombre'=>'accion3', 'accion'=> 'accion3', 'icono' => 'icono-accion3', 'menu_id'=>1, 'activo_menu'=>0, 'activo_accion'=>1],
-            ['id'=>4, 'nombre'=>'accion4', 'accion'=> 'accion4', 'icono' => 'icono-accion4', 'menu_id'=>1, 'activo_menu'=>0, 'activo_accion'=>1],
-
-            ['id'=>5, 'nombre'=>'accion1', 'accion'=> 'accion1', 'icono' => 'icono-accion1', 'menu_id'=>2, 'activo_menu'=>0, 'activo_accion'=>1],
-            ['id'=>6, 'nombre'=>'accion2', 'accion'=> 'accion2', 'icono' => 'icono-accion2', 'menu_id'=>2, 'activo_menu'=>0, 'activo_accion'=>1],
-            ['id'=>7, 'nombre'=>'accion3', 'accion'=> 'accion3', 'icono' => 'icono-accion3', 'menu_id'=>2, 'activo_menu'=>0, 'activo_accion'=>1],
-            ['id'=>8, 'nombre'=>'accion4', 'accion'=> 'accion4', 'icono' => 'icono-accion4', 'menu_id'=>2, 'activo_menu'=>0, 'activo_accion'=>1]
-        ];
-        foreach ($metodos as $metodo) {
-            $Metodos->registrar($metodo);
-        }
-
-        $metodosgrupos = [
-            ['id' => 1,'grupo_id' => 5 , 'metodo_id' => 1, 'activo' => 1],
-            ['id' => 2,'grupo_id' => 5 , 'metodo_id' => 2, 'activo' => 1],
-            ['id' => 3,'grupo_id' => 5 , 'metodo_id' => 3, 'activo' => 1],
-            ['id' => 4,'grupo_id' => 5 , 'metodo_id' => 4, 'activo' => 1],
-
-            ['id' => 5,'grupo_id' => 5 , 'metodo_id' => 5, 'activo' => 1],
-            ['id' => 6,'grupo_id' => 5 , 'metodo_id' => 6, 'activo' => 1],
-            ['id' => 7,'grupo_id' => 6 , 'metodo_id' => 1, 'activo' => 1],
-            ['id' => 8,'grupo_id' => 6 , 'metodo_id' => 2, 'activo' => 1]
-        ];
-
-        foreach ($metodosgrupos as $metodogrupo) {
-            $MetodosGrupos->registrar($metodogrupo);
-        }
-
-        return $Grupos;
-    }
-
-    /**
-     * @test
-     * @depends crearModelo
-     */
-    public function obtenerIdsMetodosGrupos($modelo)
-    {
-        $resultado = $modelo->obtenerIdsMetodosGrupos(5);
-        $this->assertIsArray($resultado);
-        $this->assertCount(6,$resultado);
-    }
-
-    /**
-     * @test
-     * @depends crearModelo
-     */
-    public function obtenerNombreGrupo($modelo)
-    {
-        $resultado = $modelo->obtenerNombreGrupo(5);
-        $this->assertSame('nombre5',$resultado);
-
-        $resultado = $modelo->obtenerNombreGrupo(6);
-        $this->assertSame('nombre6',$resultado);
-    }
-
-    /**
-     * @test
-     * @depends crearModelo
-     */
-    public function obtenerMetodosAgrupadosPorMenu($modelo)
-    {
-        $resultado = $modelo->obtenerMetodosAgrupadosPorMenu(5);
-        $this->assertIsArray($resultado);
-        $this->assertCount(2,$resultado);
-
-        $this->assertIsArray($resultado['nombre1']);
-        $this->assertCount(4,$resultado['nombre1']);
-        $this->assertArrayHasKey('id', $resultado['nombre1'][0]);
-        $this->assertArrayHasKey('metodo', $resultado['nombre1'][0]);
-        $this->assertArrayHasKey('activo', $resultado['nombre1'][0]);
-
-        $this->assertIsArray($resultado['nombre2']);
-        $this->assertCount(4,$resultado['nombre2']);
-        $this->assertArrayHasKey('id', $resultado['nombre2'][0]);
-        $this->assertArrayHasKey('metodo', $resultado['nombre2'][0]);
-        $this->assertArrayHasKey('activo', $resultado['nombre2'][0]);
-
+        return $Menus;
     }
 
     /**
@@ -177,7 +62,7 @@ class ModeloGruposTest extends TestCase
             } catch (ErrorBase $e) {
                 $error = $e;
             }
-            $mensajeEsperado = "grupo:{$registro['nombre']} ya registrad@";
+            $mensajeEsperado = "menu:{$registro['nombre']} ya registrad@";
             $this->assertSame($mensajeEsperado,$error->getMessage());
 
         }
@@ -197,7 +82,7 @@ class ModeloGruposTest extends TestCase
 
             $resultado = $modelo->obtenerDatosConRegistroId($registro['id']);
             $this->assertIsArray($resultado);
-            $this->assertCount(7,$resultado);
+            $this->assertCount(9,$resultado);
 
             $columnas = [];
             $orderBy = [];
@@ -206,7 +91,7 @@ class ModeloGruposTest extends TestCase
 
             $resultado = $modelo->obtenerDatosConRegistroId($registro['id'], $columnas, $orderBy, $limit, $noUsarRelaciones);
             $this->assertIsArray($resultado);
-            $this->assertCount(7,$resultado);
+            $this->assertCount(9,$resultado);
         }
         return $registros;
     }
@@ -219,7 +104,7 @@ class ModeloGruposTest extends TestCase
     public function obtenerNumeroRegistros($modelo,$registros)
     {
         $resultado = $modelo->obtenerNumeroRegistros();
-        $this->assertSame((count($registros)+$this->registrosExtras),$resultado);
+        $this->assertSame(count($registros),$resultado);
         return $registros;
     }
 
@@ -292,7 +177,7 @@ class ModeloGruposTest extends TestCase
             } catch (ErrorBase $e) {
                 $error = $e;
             }
-            $mensajeEsperado = "grupo:{$registro[$campoTabla]} ya registrad@";
+            $mensajeEsperado = "menu:{$registro[$campoTabla]} ya registrad@";
             $this->assertSame($mensajeEsperado,$error->getMessage());
         }
 
@@ -317,7 +202,7 @@ class ModeloGruposTest extends TestCase
         }
 
         $resultado = $modelo->obtenerNumeroRegistros();
-        $this->assertSame((count($registros)+$this->registrosExtras),$resultado);
+        $this->assertSame(count($registros),$resultado);
 
         return $registros;
     }
@@ -326,11 +211,9 @@ class ModeloGruposTest extends TestCase
      * @test
      * @depends crearModelo
      * @depends eliminarPorId
-     * @depends crearModeloMetodosGrupos
      */
-    public function eliminarTodo($modelo,$registrosl,$MetodosGrupos)
+    public function eliminarTodo($modelo,$registrosl)
     {
-        $MetodosGrupos->eliminarTodo();
         $resultado = $modelo->eliminarTodo();
         $this->assertIsArray($resultado);
         $this->assertCount(1,$resultado);

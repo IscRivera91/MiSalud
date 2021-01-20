@@ -1,10 +1,12 @@
 <?php
 
-use Clase\MySQL\Database;
-use Error\Base AS ErrorBase;
-use PHPUnit\Framework\TestCase;
+namespace Test\clases;
 
-class ClaseMySQLDatabaseTest extends TestCase
+use App\clases\MySQL\Database;
+use PHPUnit\Framework\TestCase;
+use App\errores\Base AS ErrorBase;
+
+class MySQLDatabaseTest extends TestCase
 { 
     /**
      * @test

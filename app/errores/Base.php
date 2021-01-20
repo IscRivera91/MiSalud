@@ -2,7 +2,8 @@
 // https://www.php.net/manual/es/language.exceptions.php
 // https://www.php.net/manual/es/language.exceptions.extending.php
 
-namespace Error;
+namespace App\errores;
+
 use Exception;
 
 class Base extends Exception
@@ -45,7 +46,7 @@ class Base extends Exception
 
         if (ES_PRODUCCION)
         {
-            header('Location: '.RUTA_PROYECTO.'error.php');
+            header('Location: '.RUTA_PROYECTO.'error.php?session_id='.SESSION_ID.'&codigo='.$this->obtenCodigo());
             exit;
         }
         

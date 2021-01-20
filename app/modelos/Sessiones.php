@@ -1,10 +1,10 @@
 <?php 
 
-namespace Modelo;
+namespace App\modelos;
 
-use Clase\Modelo;
-use Interfas\Database;
-use Error\Autentificacion AS ErrorAutentificacion;
+use App\clases\Modelo;
+use App\interfaces\Database;
+use App\errores\Autentificacion AS ErrorAutentificacion;
 
 class Sessiones extends Modelo
 {
@@ -29,7 +29,9 @@ class Sessiones extends Modelo
             ['campo' => "sessiones.session_id" , 'valor' =>  $sessionId , 'signoComparacion' => '=' , 'conectivaLogica' => '' ]
         ];
 
-        $resultado = parent::buscarConFiltros($filtros);
+        $filtroEspecial = '';
+
+        $resultado = parent::buscarConFiltros($filtros, $filtroEspecial);
 
         if ( $resultado['numeroRegistros'] !== 1){
             throw new ErrorAutentificacion('sessionId no valido');

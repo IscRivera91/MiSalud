@@ -1,12 +1,16 @@
 <?php
 
-use Modelo\Grupos;
-use Modelo\Usuarios;
-use Modelo\MetodosGrupos;
-use Error\Base AS ErrorBase;
+namespace Test\modelos;
+
+use App\modelos\Menus;
+use App\modelos\Grupos;
+use App\modelos\Metodos;
+use App\modelos\MetodosGrupos;
+use App\errores\Base AS ErrorBase;
+use Test\LimpiarDatabase;
 use PHPUnit\Framework\TestCase;
 
-class ModeloUsuariosTest extends TestCase
+class MetodosGruposTest extends TestCase
 {
     /**
      * @test
@@ -14,7 +18,7 @@ class ModeloUsuariosTest extends TestCase
     public function crearConeccion()
     {
         $this->assertSame(1,1);
-        $claseDatabase = 'Clase\\'.DB_TIPO.'\\Database';
+        $claseDatabase = 'App\\clases\\'.DB_TIPO.'\\Database';
         $coneccion = new $claseDatabase();
         return $coneccion;
     }
@@ -28,16 +32,43 @@ class ModeloUsuariosTest extends TestCase
         $this->assertSame(1,1);
         $MetodosGrupos = new MetodosGrupos($coneccion);
         $Grupos = new Grupos($coneccion);
-        $Usuarios = new Usuarios($coneccion);
+        $Metodos = new Metodos($coneccion);
+        $Menus = new Menus($coneccion);
 
-        $MetodosGrupos->eliminarTodo();
-        $Usuarios->eliminarTodo();
-        $Grupos->eliminarTodo();
+        LimpiarDatabase::start($coneccion);
 
-        $grupo = ['id' => 1,'nombre' => 'nombre1' , 'activo' => 1];
-        $Grupos->registrar($grupo);
+        $grupos = [
+            ['id' => 1,'nombre' => 'nombre5' , 'activo' => 1],
+            ['id' => 2,'nombre' => 'nombre6' , 'activo' => 1]
+        ];
+        foreach ($grupos as $grupo) {
+            $Grupos->registrar($grupo);
+        }
 
-        return $Usuarios;
+        $menus = [
+            ['id' => 1,'nombre' => 'nombre1' , 'activo' => 1],
+            ['id' => 2,'nombre' => 'nombre2' , 'activo' => 1]
+        ];
+        foreach ($menus as $menu) {
+            $Menus->registrar($menu);
+        }
+
+        $metodos = [
+            ['id'=>1, 'nombre'=>'accion1', 'accion'=> 'accion1', 'icono' => 'icono-accion1', 'menu_id'=>1, 'activo_menu'=>0, 'activo_accion'=>1],
+            ['id'=>2, 'nombre'=>'accion2', 'accion'=> 'accion2', 'icono' => 'icono-accion2', 'menu_id'=>1, 'activo_menu'=>0, 'activo_accion'=>1],
+            ['id'=>3, 'nombre'=>'accion3', 'accion'=> 'accion3', 'icono' => 'icono-accion3', 'menu_id'=>1, 'activo_menu'=>0, 'activo_accion'=>1],
+            ['id'=>4, 'nombre'=>'accion4', 'accion'=> 'accion4', 'icono' => 'icono-accion4', 'menu_id'=>1, 'activo_menu'=>0, 'activo_accion'=>1],
+
+            ['id'=>5, 'nombre'=>'accion1', 'accion'=> 'accion1', 'icono' => 'icono-accion1', 'menu_id'=>2, 'activo_menu'=>0, 'activo_accion'=>1],
+            ['id'=>6, 'nombre'=>'accion2', 'accion'=> 'accion2', 'icono' => 'icono-accion2', 'menu_id'=>2, 'activo_menu'=>0, 'activo_accion'=>1],
+            ['id'=>7, 'nombre'=>'accion3', 'accion'=> 'accion3', 'icono' => 'icono-accion3', 'menu_id'=>2, 'activo_menu'=>0, 'activo_accion'=>1],
+            ['id'=>8, 'nombre'=>'accion4', 'accion'=> 'accion4', 'icono' => 'icono-accion4', 'menu_id'=>2, 'activo_menu'=>0, 'activo_accion'=>1]
+        ];
+        foreach ($metodos as $metodo) {
+            $Metodos->registrar($metodo);
+        }
+
+        return $MetodosGrupos;
     }
 
     /**
@@ -47,10 +78,15 @@ class ModeloUsuariosTest extends TestCase
     public function registrar($modelo)
     {
         $registros = [
-            ['id' => 1,'usuario' => 'usuario1', 'password' => 'userpass', 'correo_electronico' => 'mail1@mail.com', 'grupo_id' => 1 , 'activo' => 1],
-            ['id' => 2,'usuario' => 'usuario2', 'password' => 'userpass', 'correo_electronico' => 'mail2@mail.com', 'grupo_id' => 1 , 'activo' => 1],
-            ['id' => 3,'usuario' => 'usuario3', 'password' => 'userpass', 'correo_electronico' => 'mail3@mail.com', 'grupo_id' => 1 , 'activo' => 1],
-            ['id' => 4,'usuario' => 'usuario4', 'password' => 'userpass', 'correo_electronico' => 'mail4@mail.com', 'grupo_id' => 1 , 'activo' => 1],
+            ['id' => 1,'grupo_id' => 1 , 'metodo_id' => 1, 'activo' => 1],
+            ['id' => 2,'grupo_id' => 1 , 'metodo_id' => 2, 'activo' => 1],
+            ['id' => 3,'grupo_id' => 1 , 'metodo_id' => 3, 'activo' => 1],
+            ['id' => 4,'grupo_id' => 1 , 'metodo_id' => 4, 'activo' => 1],
+
+            ['id' => 5,'grupo_id' => 2 , 'metodo_id' => 1, 'activo' => 1],
+            ['id' => 6,'grupo_id' => 2 , 'metodo_id' => 2, 'activo' => 1],
+            ['id' => 7,'grupo_id' => 2 , 'metodo_id' => 3, 'activo' => 1],
+            ['id' => 8,'grupo_id' => 2 , 'metodo_id' => 4, 'activo' => 1]
         ];
 
         foreach ($registros as $key => $registro) {
@@ -62,25 +98,15 @@ class ModeloUsuariosTest extends TestCase
             $this->assertSame($mensajeEsperado,$resultado['mensaje']);
             $this->assertSame($registro['id'],$resultado['registroId']);
 
+            unset($registro['id']);
             $error = null;
             try {
                 $resultado = $modelo->registrar($registro);
             } catch (ErrorBase $e) {
                 $error = $e;
             }
-            $mensajeEsperado = "usuario:{$registro['usuario']} ya registrad@";
-            $this->assertSame($mensajeEsperado,$error->getMessage());
-
-            $registro['usuario'] = 'nuevo_usuario';
-
-            $error = null;
-            try {
-                $resultado = $modelo->registrar($registro);
-            } catch (ErrorBase $e) {
-                $error = $e;
-            }
-            $mensajeEsperado = "correo:{$registro['correo_electronico']} ya registrad@";
-            $this->assertSame($mensajeEsperado,$error->getMessage());
+            $codigoError = $error->obtenCodigo();
+            $this->assertSame('23000',$codigoError);
 
         }
 
@@ -99,7 +125,7 @@ class ModeloUsuariosTest extends TestCase
 
             $resultado = $modelo->obtenerDatosConRegistroId($registro['id']);
             $this->assertIsArray($resultado);
-            $this->assertCount(18,$resultado);
+            $this->assertCount(37,$resultado);
 
             $columnas = [];
             $orderBy = [];
@@ -108,7 +134,7 @@ class ModeloUsuariosTest extends TestCase
 
             $resultado = $modelo->obtenerDatosConRegistroId($registro['id'], $columnas, $orderBy, $limit, $noUsarRelaciones);
             $this->assertIsArray($resultado);
-            $this->assertCount(11,$resultado);
+            $this->assertCount(8,$resultado);
         }
         return $registros;
     }
@@ -168,43 +194,6 @@ class ModeloUsuariosTest extends TestCase
      * @test
      * @depends crearModelo
      * @depends buscarPorId
-     */
-    public function modificarPorId($modelo,$registros)
-    {
-        $campoTabla = 'usuario';
-        foreach ($registros as $key => $registro) {
-
-            $registro[$campoTabla] = $registro[$campoTabla].'_modificado';
-            $registros[$key][$campoTabla] = $registro[$campoTabla]; 
-
-            $resultado = $modelo->modificarPorId($registro['id'],$registro);
-            $this->assertIsArray($resultado);
-            $this->assertCount(1,$resultado);
-            $mensajeEsperado = 'registro modificado';
-            $this->assertSame($mensajeEsperado,$resultado['mensaje']);
-        }
-
-        for ($i = 1 ; $i < 4 ; $i++) {
-            $registro = $registros[$i]; 
-            $registro[$campoTabla] = $registros[0][$campoTabla];
-
-            $error = null;
-            try {
-                $resultado = $modelo->modificarPorId($registro['id'],$registro);
-            } catch (ErrorBase $e) {
-                $error = $e;
-            }
-            $mensajeEsperado = "usuario:{$registro[$campoTabla]} ya registrad@";
-            $this->assertSame($mensajeEsperado,$error->getMessage());
-        }
-
-        return $registros;
-    }
-
-    /**
-     * @test
-     * @depends crearModelo
-     * @depends modificarPorId
      */
     public function eliminarPorId($modelo,$registros)
     {
