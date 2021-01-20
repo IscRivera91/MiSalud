@@ -169,7 +169,7 @@ class BaseDatos
 
         $numeroMenus = 5;
 
-        $numeroMetodosEspeciales = 5;
+        $numeroMetodosEspeciales = 7;
         $query .= "
             INSERT INTO `metodos` 
             (id,nombre,etiqueta,accion,icono,menu_id,activo_menu,activo_accion,activo,usuario_registro_id,usuario_actualizacion_id)
@@ -181,6 +181,9 @@ class BaseDatos
             ('3','permisos','','Asigna Permisos','fas fa-plus-square',3,FALSE,TRUE,TRUE,-1,-1),
             ('4','bajaPermiso','','','',3,FALSE,FALSE,TRUE,-1,-1),
             ('5','altaPermiso','','','',3,FALSE,FALSE,TRUE,-1,-1),
+
+            ('6','nuevoRegistro','Nuevo Registro','','',5,TRUE,FALSE,TRUE,-1,-1),
+            ('7','registros','Registros','','',5,TRUE,FALSE,TRUE,-1,-1),
 
         ";
 
