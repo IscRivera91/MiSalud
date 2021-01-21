@@ -3,6 +3,7 @@
 namespace App\controladores;
 
 use App\ayudas\Html;
+use App\ayudas\Redireccion;
 use App\clases\Controlador;
 use App\interfaces\Database;
 use App\modelos\Presiones AS ModeloPresiones;
@@ -44,6 +45,25 @@ class presiones extends Controlador
         $placeholder = '';
 
         $this->htmlInputFiltros[$tablaCampo] = Html::inputText($col,'Usuario',1,$tablaCampo,$placeholder,$datos[$tablaCampo]);
+    }
+
+    public function nuevoRegistro(): void
+    {
+        
+    }
+
+    public function registrarBd()
+    {
+        $_POST['usuario_id'] = USUARIO_ID;
+        $this->redireccionar = false;
+        $resultado = parent::registrarBd();
+        
+        Redireccion::enviar($this->nombreMenu,'registros',SESSION_ID,$resultado);
+    }
+
+    public function registros()
+    {
+
     }
 
 }
