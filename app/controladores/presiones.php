@@ -11,6 +11,7 @@ use App\modelos\Presiones AS ModeloPresiones;
 class presiones extends Controlador
 {
     private $Presiones;
+    public array $registros;
 
     public function __construct(Database $coneccion)
     {
@@ -63,7 +64,13 @@ class presiones extends Controlador
 
     public function registros()
     {
-
+        $filtros = [
+            ['campo'=>'presiones.usuario_id', 'valor'=>USUARIO_ID, 'signoComparacion'=>'=', 'conectivaLogica' => ''],
+        ];
+        $filtroEspecial = '';
+        $columnas = ['presiones_sistolica','presiones_diastolica','presiones_bpm','presiones_fecha','presiones_hora'];
+        $orderBy = ['presiones_fecha' => 'DESC','presiones_hora' => 'DESC'];
+        $this->registros = $this->Presiones->buscarConFiltros($filtros,$filtroEspecial,$columnas,$orderBy,'',true)['registros'];
     }
 
 }
