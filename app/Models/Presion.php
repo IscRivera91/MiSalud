@@ -10,6 +10,8 @@ class Presion extends Model
 {
     const NOMBRE_TABLA = 'presiones';
 
+    protected $table = 'presiones';
+
     use HasFactory;
 
     /**
