@@ -1,7 +1,12 @@
 .idea/
+public/test.php
 .phpunit.result.cache
 /mysql
 /vendor
 archivos/*
 .env
 phpunit.xml
+node_modules
+public/dist/*
+public/test.php
+.Todo

@@ -1,11 +1,11 @@
-<?php use App\ayudas\Redireccion; ?>
+<?php use App\Class\Redireccion; ?>
 <aside class="main-sidebar sidebar-light-primary elevation-4">
 
-  <a  href="<?php echo Redireccion::obtener('inicio','index',SESSION_ID);?>" class="brand-link">
-    <img src="<?php echo RUTA_PROYECTO; ?>img/logo.png"
+  <a  href="<?php echo Redireccion::obtener('Inicio','index',SESSION_ID);?>" class="brand-link">
+    <img width="10%" src="<?php echo APP_URL; ?>img/logo.png"
         class="brand-image img-circle elevation-3"
         style="opacity: .8">
-    <span class="brand-text font-weight-light" ><b><?= NOMBRE_PROYECTO ?></b></span>
+    <span class="brand-text font-weight-light" ><b><?= APP_NAME ?></b></span>
   </a>
 
   
@@ -16,14 +16,14 @@
 
       <?php foreach ($menu_navegacion as $item_menu => $menu) { ?>
         <?php 
-          $menuControlador = $menu_navegacion[$item_menu][0];
-          $menuIcono = $menu_navegacion[$item_menu][1];
-          $menuEtiqueta = $menu_navegacion[$item_menu][2];
+          $menuControlador = $menu[0];
+          $menuIcono = $menu[1];
+          $menuEtiqueta = $menu[2];
         
           
-          $imprime = '<li class="nav-item has-treeview">';
+          $imprime = '<li Class="nav-item has-treeview">';
           if ( $controladorActual == $menuControlador){
-            $imprime =  '<li class="nav-item has-treeview menu-open">';
+            $imprime =  '<li Class="nav-item has-treeview menu-open">';
           }
           echo $imprime;
         ?>

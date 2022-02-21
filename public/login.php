@@ -1,9 +1,7 @@
-<?php 
-    $rutaBase = __DIR__.'/../';
-    require_once "{$rutaBase}app/config/requires.php"; 
-
+<?php
+    require_once 'vendor.config.php';
+    require_once __DIR__.'/../recursos/html/head.php';
 ?>
-<?php require_once __DIR__.'/../recursos/html/head.php'; ?>
 
 
 <body class="hold-transition login-page">
@@ -13,7 +11,7 @@
     <br>
     <div class="row">
       <div class="col-md-12">
-          <div class="alert alert-default alert-argus alert-dismissible fade show" role="alert">
+          <div class="alert alert-default alert-main alert-dismissible fade show" role="alert">
               <strong><?php echo $_GET['mensaje']; ?></strong>.
               <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                   <span aria-hidden="true">&times;</span>
@@ -52,7 +50,7 @@
           </div>
           <!-- /.col -->
           <div class="col-4">
-            <button type="submit" class="btn btn-default btn-argus btn-block">Entrar</button>
+            <button type="submit" class="btn btn-default btn-main btn-block">Entrar</button>
           </div>
           <!-- /.col -->
         </div>
