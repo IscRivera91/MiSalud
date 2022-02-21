@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Presion extends Model
 {
@@ -17,10 +18,22 @@ class Presion extends Model
      * @var string[]
      */
     protected $fillable = [
-        'name',
+        'user_id',
+        'sistolica',
+        'diastolica',
+        'bpm',
+        'fecha',
+        'hora',
         'activo',
         'created_user_id',
         'updated_user_id',
-
     ];
+
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }
