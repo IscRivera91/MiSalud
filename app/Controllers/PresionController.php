@@ -44,7 +44,11 @@ class PresionController extends BaseController
     public function registros()
     {
         $this->breadcrumb = false;
-        $registros = Presion::query()->where('user_id',USUARIO_ID)->get()->toArray();
+        $registros = Presion::query()
+            ->where('user_id',USUARIO_ID)
+            ->orderBy('fecha','DESC')
+            ->orderBy('hora','DESC')
+            ->get()->toArray();
         $this->registros = $registros;
     }
 
