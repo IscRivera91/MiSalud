@@ -11,7 +11,7 @@
  Target Server Version : 50733
  File Encoding         : 65001
 
- Date: 20/02/2022 21:36:29
+ Date: 20/02/2022 21:59:42
 */
 
 SET NAMES utf8mb4;
@@ -34,7 +34,7 @@ CREATE TABLE `group_method`  (
   INDEX `method_id`(`method_id`) USING BTREE,
   CONSTRAINT `group_method_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
   CONSTRAINT `group_method_ibfk_2` FOREIGN KEY (`method_id`) REFERENCES `methods` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 58 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 61 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of group_method
@@ -96,6 +96,9 @@ INSERT INTO `group_method` VALUES (54, 2, 44, NULL, NULL, NULL, NULL);
 INSERT INTO `group_method` VALUES (55, 2, 45, NULL, NULL, NULL, NULL);
 INSERT INTO `group_method` VALUES (56, 2, 46, NULL, NULL, NULL, NULL);
 INSERT INTO `group_method` VALUES (57, 2, 47, NULL, NULL, NULL, NULL);
+INSERT INTO `group_method` VALUES (58, 1, 48, NULL, NULL, '2022-02-20 21:58:44', '2022-02-20 21:58:44');
+INSERT INTO `group_method` VALUES (59, 1, 49, NULL, NULL, '2022-02-20 21:58:44', '2022-02-20 21:58:44');
+INSERT INTO `group_method` VALUES (60, 1, 50, NULL, NULL, '2022-02-20 21:58:44', '2022-02-20 21:58:44');
 
 -- ----------------------------
 -- Table structure for groups
@@ -133,7 +136,7 @@ CREATE TABLE `menus`  (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of menus
@@ -143,6 +146,7 @@ INSERT INTO `menus` VALUES (2, 'Method', 'METODOS', 'fas fa-list-ul', 1, -1, -1,
 INSERT INTO `menus` VALUES (3, 'Group', 'GRUPOS', 'fas fa-users-cog', 1, -1, -1, NULL, NULL);
 INSERT INTO `menus` VALUES (4, 'User', 'USUARIOS', 'fas fa-users', 1, -1, -1, NULL, NULL);
 INSERT INTO `menus` VALUES (5, 'Admin', 'ADMINS', 'fas fa-users', 1, -1, -1, NULL, NULL);
+INSERT INTO `menus` VALUES (6, 'Presion', 'PRESIONES', 'fas fa-heartbeat', 1, -1, -1, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for methods
@@ -165,7 +169,7 @@ CREATE TABLE `methods`  (
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `menu_id`(`menu_id`) USING BTREE,
   CONSTRAINT `methods_ibfk_1` FOREIGN KEY (`menu_id`) REFERENCES `menus` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
-) ENGINE = InnoDB AUTO_INCREMENT = 48 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
+) ENGINE = InnoDB AUTO_INCREMENT = 51 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = COMPACT;
 
 -- ----------------------------
 -- Records of methods
@@ -217,6 +221,9 @@ INSERT INTO `methods` VALUES (44, 'desactivarBd', '', 'Desactivar', 'fas fa-paus
 INSERT INTO `methods` VALUES (45, 'modificar', '', 'Modificar', 'fas fa-pencil-alt', 5, 0, 1, 1, -1, -1, NULL, NULL);
 INSERT INTO `methods` VALUES (46, 'eliminarBd', '', 'Eliminar', 'fas fa-trash', 5, 0, 1, 1, -1, -1, NULL, NULL);
 INSERT INTO `methods` VALUES (47, 'modificarBd', '', '', '', 5, 0, 0, 1, -1, -1, NULL, NULL);
+INSERT INTO `methods` VALUES (48, 'nuevoRegistro', 'Nuevo Registro', ' ', ' ', 6, 1, 0, 1, 1, 1, '2022-02-20 21:57:26', '2022-02-20 21:57:26');
+INSERT INTO `methods` VALUES (49, 'registrarBd', ' ', ' ', ' ', 6, 0, 0, 1, 1, 1, '2022-02-20 21:57:47', '2022-02-20 21:57:47');
+INSERT INTO `methods` VALUES (50, 'registros', 'Registros', ' ', ' ', 6, 1, 0, 1, 1, 1, '2022-02-20 21:58:20', '2022-02-20 21:58:20');
 
 -- ----------------------------
 -- Table structure for presiones
