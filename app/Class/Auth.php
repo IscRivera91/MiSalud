@@ -30,7 +30,7 @@ class Auth
 
         $sessionId = self::generateSessionId($user, $password);
         self::insertSessionId($sessionId, $User->id);
-
+        setcookie("sessionId", $sessionId, strtotime("+72 hours"));
         return ['sessionId' => $sessionId];
     }
 

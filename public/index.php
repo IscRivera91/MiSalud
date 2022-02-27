@@ -10,6 +10,12 @@ use App\Errors\Base AS ErrorBase;
 $controladoresSinPermisos = ['Inicio','Password'];
 $parametrosGetRequeridos = array('controlador','metodo');
 
+if (isset($_COOKIE['sessionId'])) {
+    $_GET['controlador'] = 'Inicio';
+    $_GET['metodo'] = 'index';
+    $_GET['session_id'] =$_COOKIE['sessionId'];
+}
+
 foreach ($parametrosGetRequeridos as $parametro){
     validaParametroGet($parametro);
 }
