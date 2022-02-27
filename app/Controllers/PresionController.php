@@ -5,12 +5,14 @@ namespace App\Controllers;
 use App\Class\BaseController;
 use App\Class\Redireccion;
 use App\Models\Presion;
+use JetBrains\PhpStorm\NoReturn;
+use JetBrains\PhpStorm\Pure;
 
 
 class PresionController extends BaseController
 {
 
-    public function __construct()
+    #[Pure] public function __construct()
     {
         $this->model = Presion::class;
         $this->nameController = 'Presion';
@@ -23,7 +25,7 @@ class PresionController extends BaseController
         $this->breadcrumb = false;
     }
 
-    public function  registrarBd()
+    #[NoReturn] public function  registrarBd()
     {
         $datos = $this->validaDatosFormulario();
 
