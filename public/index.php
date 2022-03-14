@@ -11,9 +11,13 @@ $controladoresSinPermisos = ['Inicio','Password'];
 $parametrosGetRequeridos = array('controlador','metodo');
 
 if (isset($_COOKIE['sessionId'])) {
-    $_GET['controlador'] = 'Inicio';
-    $_GET['metodo'] = 'index';
-    $_GET['session_id'] =$_COOKIE['sessionId'];
+    if (!isset($_GET['controlador'])) {
+        $_GET['controlador'] = 'Inicio';
+    }
+    if (!isset($_GET['metodo'])) {
+        $_GET['metodo'] = 'index';
+    }
+    $_GET['session_id'] = $_COOKIE['sessionId'];
 }
 
 foreach ($parametrosGetRequeridos as $parametro){
